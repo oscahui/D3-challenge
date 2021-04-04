@@ -117,26 +117,30 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup) {
 
     var xlabel;
     var ylabel;
-  
-    if (chosenXAxis === "poverty") {
-      xlabel = "Poverty:";
-    }
-    else if (chosenXAxis === "age") {
-      xlabel = "Age:";
-    }
-    else if (chosenXAxis === "income"){
+
+    switch (chosenXAxis){
+      case "poverty":
+        xlabel = "Poverty:"
+      break;
+      case "age":
+        xlabel = "Age:";
+      break;
+      case "income":
         xlabel = "Household income:"
+      break;
     }
 
-    if (chosenYAxis === 'healthcare'){
+    switch (chosenYAxis){
+      case "healthcare":
         ylabel = "Health:"
-    }
-    else if (chosenYAxis === 'obesity'){
-        ylabel = "Obesity:"
-    }
-    else if (chosenYAxis === 'smokes'){
-        ylabel = "Smokes:"
-    }
+      break;
+      case "obesity":
+        ylabel = "Obesity:";
+      break;
+      case "smokes":
+        ylabel = "Smokes"
+      break;
+    }    
   
     var toolTip = d3.tip()
       .attr("class", "tooltip")
@@ -145,8 +149,8 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup) {
       .style("background", 'white')
       .style("border", "solid")
       .style("border-width", "1px")
-      .style("border-radius", "5px")
-      .style("padding", "5px")
+      .style("border-radius", "2px")
+      .style("padding", "2px")
       .html(function(d) {
         return (`${d.state}<br>${xlabel} ${d[chosenXAxis]}%<br>${ylabel} ${d[chosenYAxis]}%`);
       });
@@ -221,21 +225,21 @@ d3.csv("assets/data/data.csv").then(function(data, err) {
     var xlabelsGroup = chartGroup.append("g")
       .attr("transform", `translate(${width / 2}, ${height + 20})`);
   
-    var PovertyLabel = xlabelsGroup.append("text")
+    var povertylabel = xlabelsGroup.append("text")
       .attr("x", 0)
       .attr("y", 20)
       .attr("value", "poverty") // value to grab for event listener
       .classed("active", true)
       .text("In Poverty (%)");
   
-    var AgeLabel = xlabelsGroup.append("text")
+    var agelabel = xlabelsGroup.append("text")
       .attr("x", 0)
       .attr("y", 40)
       .attr("value", "age") // value to grab for event listener
       .classed("inactive", true)
       .text("Age (Median)");
 
-    var IncomeLabel = xlabelsGroup.append("text")
+    var incomeLabel = xlabelsGroup.append("text")
       .attr("x", 0)
       .attr("y", 60)
       .attr("value", "income") // value to grab for event listener
@@ -246,7 +250,7 @@ d3.csv("assets/data/data.csv").then(function(data, err) {
     var ylabelsGroup = chartGroup.append("g")
       .attr("transform", "rotate(-90)")
     
-    var ObeseLabel = ylabelsGroup.append("text")
+    var obeseLabel = ylabelsGroup.append("text")
       .attr("y", -80)
       .attr("x", -(height/2))
       .attr("dy", "1em")
@@ -254,7 +258,7 @@ d3.csv("assets/data/data.csv").then(function(data, err) {
       .classed("inactive", true)
       .text("Obese (%)");
   
-    var SmokesLabel = ylabelsGroup.append("text")
+    var smokesLabel = ylabelsGroup.append("text")
       .attr("y", -60)
       .attr("x", -(height/2))
       .attr("dy", "1em")
@@ -262,7 +266,7 @@ d3.csv("assets/data/data.csv").then(function(data, err) {
       .classed("inactive", true)
       .text("Smokes (%)");
 
-    var HealthLabel = ylabelsGroup.append("text")
+    var healthLabel = ylabelsGroup.append("text")
       .attr("y", -40)
       .attr("x", -(height/2))
       .attr("dy", "1em")
@@ -303,38 +307,39 @@ d3.csv("assets/data/data.csv").then(function(data, err) {
   
           // changes classes to change bold text
           switch (chosenXAxis){
-            case "obesity":
-              ObeseLabel
-              .classed("active", true)
-              .classed("inactive", false);
-              SmokesLabel
-              .classed("active", false)
-              .classed("inactive", true);
-              HealthLabel
-              .classed("active", false)
-              .classed("inactive", true);
-            break;
-            case "smokes":
-              ObeseLabel
-              .classed("active", false)
-              .classed("inactive", true);
-              ObeseLabel
-              .classed("active", true)
-              .classed("inactive", false);
-              HealthLabel
-              .classed("active", false)
-              .classed("inactive", true);
-            break;
-            case"healthcare":
-              ObeseLabel
-              .classed("active", false)
-              .classed("inactive", true);
-              ObeseLabel
-              .classed("active", false)
-              .classed("inactive", false);
-              HealthLabel
-              .classed("active", true)
-              .classed("inactive", false);  
+            case "age":
+            agelabel
+            .classed("active", true)
+            .classed("inactive", false);
+            povertylabel
+            .classed("active", false)
+            .classed("inactive", true);
+            incomelabel
+            .classed("active", false)
+            .classed("inactive", true);
+          break;
+          case "poverty":
+            agelabel
+            .classed("active", false)
+            .classed("inactive", true);
+            povertylabel
+            .classed("active", true)
+            .classed("inactive", false);
+            incomelabel
+            .classed("active", false)
+            .classed("inactive", true);
+          break;
+          case"income":
+            agelabel
+            .classed("active", false)
+            .classed("inactive", true);
+            povertylabel
+            .classed("active", false)
+            .classed("inactive", true);
+            incomelabel
+            .classed("active", true)
+            .classed("inactive", false);
+          break;              
           }
         }
       });
@@ -368,39 +373,40 @@ d3.csv("assets/data/data.csv").then(function(data, err) {
         circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup);
 
         // changes classes to change bold text
-        switch (chosenYAxis){
-          case "age":
-            agelabel
-            .classed("active", true)
-            .classed("inactive", false);
-            povertylabel
-            .classed("active", false)
-            .classed("inactive", true);
-            incomelabel
-            .classed("active", false)
-            .classed("inactive", true);
-          break;
-          case "poverty":
-            agelabel
-            .classed("active", false)
-            .classed("inactive", true);
-            povertylabel
-            .classed("active", true)
-            .classed("inactive", false);
-            incomelabel
-            .classed("active", false)
-            .classed("inactive", true);
-          break;
-          case"income":
-          agelabel
-            .classed("active", false)
-            .classed("inactive", true);
-            povertylabel
-            .classed("active", false)
-            .classed("inactive", false);
-            incomelabel
-            .classed("active", true)
-            .classed("inactive", false);  
+        switch (chosenYAxis){          
+          case "obesity":
+              obeseLabel
+              .classed("active", true)
+              .classed("inactive", false);
+              smokesLabel
+              .classed("active", false)
+              .classed("inactive", true);
+              healthLabel
+              .classed("active", false)
+              .classed("inactive", true);
+            break;
+            case "smokes":
+              obeseLabel
+              .classed("active", false)
+              .classed("inactive", true);
+              smokesLabel
+              .classed("active", true)
+              .classed("inactive", false);
+              healthLabel
+              .classed("active", false)
+              .classed("inactive", true);
+            break;
+            case"healthcare":
+              obeseLabel
+              .classed("active", false)
+              .classed("inactive", true);
+              smokesLabel
+              .classed("active", false)
+              .classed("inactive", true);
+              healthLabel
+              .classed("active", true)
+              .classed("inactive", false);
+            break;   
         }
       }
     });
